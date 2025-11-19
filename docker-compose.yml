@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: goapp-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MQTT_BROKER=mqtt://broker.hivemq.com
+      - MQTT_TOPIC=goapp/messages
+    restart: unless-stopped
+    networks:
+      - goapp-network
+
+  frontend:
+    build: ./frontend
+    container_name: goapp-frontend
+    ports:
+      - "6789:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - goapp-network
+
+  dashboard:
+    build: ./dashboard
+    container_name: goapp-dashboard
+    ports:
+      - "6790:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - goapp-network
+
+networks:
+  goapp-network:
+    driver: bridge
