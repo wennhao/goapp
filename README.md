@@ -66,8 +66,8 @@ docker compose up -d --build
 ```
 
 4. **Open apps**:
-- Frontend: `http://192.168.1.88:6789` (op telefoon/tablet)
-- Dashboard: `http://192.168.1.88:6790` (op server)
+- Frontend: `http://[server-ip]:6789` (op telefoon/tablet)
+- Dashboard: `http://[server-ip]:6790` (op server)
 
 ### Development Mode (npm)
 
@@ -82,7 +82,7 @@ npm run dev
 ```bash
 cd dashboard
 npm install
-# Maak dashboard/.env: VITE_BACKEND_WS_URL=ws://192.168.1.88:3001
+# Maak dashboard/.env: VITE_BACKEND_WS_URL=ws://[server-ip]:3001
 npm run dev
 ```
 
@@ -90,7 +90,7 @@ npm run dev
 ```bash
 cd frontend
 npm install
-# Maak frontend/.env: VITE_BACKEND_URL=http://192.168.1.88:3001
+# Maak frontend/.env: VITE_BACKEND_URL=http://[server-ip]:3001
 npm run dev
 ```
 
@@ -98,8 +98,8 @@ npm run dev
 
 ```
 goapp/
-├── frontend/          # React PWA (mobiele interface)
-├── dashboard/         # React Dashboard (monitoring)
+├── frontend/          # React App
+├── dashboard/         # React Dashboard
 ├── backend/          # Node.js + Express + MQTT
 │   └── uploads/      # Foto uploads
 ├── docker-compose.yml
@@ -127,22 +127,39 @@ goapp/
 
 ## Buttons Aanpassen
 
-Bewerk `frontend/src/data/buttons.js`:
+Buttons toevoegen of verwijderen is eenvoudig. Bewerk `frontend/src/data/buttons.js`:
+
 ```javascript
 export const buttons = [
   {
     id: 'melden',
     label: 'Melden',
-    icon: '/buttonicons/melden.png',
+    icon: '/buttonicons/icon_melden.png',
     hasAction: true,
-    backgroundColor: '#e6ecf8',
-    textColor: '#333'
+    backgroundColor: '#e6ecf8',  // Optioneel
+    textColor: '#333'             // Optioneel
+  },
+  {
+    id: 'instructies',
+    label: 'Instructies',
+    icon: '/buttonicons/icon_instructies.png',
+    hasAction: false
   }
-  // Voeg meer buttons toe...
+  // Voeg meer buttons toe of verwijder regels...
 ];
 ```
 
-Plaats iconen in `frontend/public/buttonicons/`.
+**Stappen:**
+1. Voeg een button object toe aan de array of verwijder een bestaande
+2. Plaats het icoon in `frontend/public/buttonicons/`
+3. `hasAction: true` = button opent een pagina (zoals Melden met formulier)
+4. `hasAction: false` = button heeft (nog) geen functionaliteit
+5. Rebuild: `docker compose up -d --build frontend`
+
+**Voorbeeld nieuwe button toevoegen:**
+```javascript
+{ id: 'noodknop', label: 'Noodknop', icon: '/buttonicons/icon_nood.png', hasAction: true }
+```
 
 ## Troubleshooting
 
