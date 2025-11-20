@@ -10,12 +10,17 @@ services:
       - PORT=3001
       - MQTT_BROKER=mqtt://broker.hivemq.com
       - MQTT_TOPIC=goapp/messages
+    volumes:
+      - ./backend/uploads:/app/uploads
     restart: unless-stopped
     networks:
       - goapp-network
 
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      args:
+        - VITE_BACKEND_URL=${BACKEND_URL:-http://localhost:3001}
     container_name: goapp-frontend
     ports:
       - "6789:80"
@@ -26,7 +31,10 @@ services:
       - goapp-network
 
   dashboard:
-    build: ./dashboard
+    build:
+      context: ./dashboard
+      args:
+        - VITE_BACKEND_WS_URL=${BACKEND_WS_URL:-ws://localhost:3001}
     container_name: goapp-dashboard
     ports:
       - "6790:80"

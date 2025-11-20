@@ -1,206 +1,215 @@
-# GoApp - PWA with MQTT Communication
+# Geen Ongevallen! APP
 
-Een app voor geen ongevallen!
+App voor veiligheidsmeldingen met real-time dashboard.
 
-A Progressive Web App (PWA) built with React and Node.js backend featuring real-time MQTT communication.
+## Architectuur
 
-## Project Structure
+```
+┌─────────────────────────────────────────────┐
+│  Server (1x)                                │
+│  ├── Backend (MQTT + API) - Port 3001      │
+│  └── Dashboard - Port 6790                  │
+└─────────────────────────────────────────────┘
+              ↕ MQTT + WebSocket
+┌─────────────────────────────────────────────┐
+│  Clients (meerdere apparaten)               │
+│  └── Frontend PWA - Port 6789               │
+└─────────────────────────────────────────────┘
+```
+
+**Hoe werkt het?**
+1. Spelers kunnen situaties melden
+2. Frontend stuurt HTTP POST naar Backend
+3. Backend publiceert MQTT message naar `goapp/messages` topic
+4. Backend broadcast via WebSocket naar Dashboard
+5. Dashboard toont melding real-time + opslaat in localStorage
+
+**Message Format:**
+```json
+{
+  "action": "melden",
+  "timestamp": "2025-11-20T10:00:00.000Z",
+  "data": {
+    "situatie": "Onveilige situatie",
+    "naam": "Jan",
+    "projectnaam": "Escape Room",
+    "omschrijving": "...",
+    "photoUrl": "/uploads/photo.jpg",
+    "device": "mobile-app"
+  }
+}
+```
+
+## Snelstart
+
+### Docker (Aanbevolen)
+
+1. **Vind je server IP** (Windows PowerShell):
+```powershell
+ipconfig
+# Zoek "IPv4 Address" bijv. 192.168.1.67
+```
+
+2. **Configureer .env** (in root folder):
+```bash
+# Kopieer .env.example naar .env
+cp .env.example .env
+
+# Bewerk .env met je server IP:
+BACKEND_URL=http://[server-ip]:3001
+BACKEND_WS_URL=ws://[server-ip]:3001
+```
+
+3. **Start containers**:
+```bash
+docker compose up -d --build
+```
+
+4. **Open apps**:
+- Frontend: `http://192.168.1.88:6789` (op telefoon/tablet)
+- Dashboard: `http://192.168.1.88:6790` (op server)
+
+### Development Mode (npm)
+
+**Backend:**
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+**Dashboard:**
+```bash
+cd dashboard
+npm install
+# Maak dashboard/.env: VITE_BACKEND_WS_URL=ws://192.168.1.88:3001
+npm run dev
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+# Maak frontend/.env: VITE_BACKEND_URL=http://192.168.1.88:3001
+npm run dev
+```
+
+## Project Structuur
 
 ```
 goapp/
-├── frontend/          # React PWA application (mobiele app)
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── main.jsx
-│   │   └── index.css
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
-│
-├── dashboard/         # React Dashboard (real-time monitoring)
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── main.jsx
-│   │   └── index.css
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
-│
-└── backend/           # Node.js Express server met MQTT
-    ├── server.js
-    ├── .env.example
-    └── package.json
+├── frontend/          # React PWA (mobiele interface)
+├── dashboard/         # React Dashboard (monitoring)
+├── backend/          # Node.js + Express + MQTT
+│   └── uploads/      # Foto uploads
+├── docker-compose.yml
+├── .env              # Docker environment vars
+└── README.md
 ```
 
 ## Features
 
-- ✅ PWA met offline support
-- ✅ Twee knoppen: **Melden** en **Compass**
-- ✅ **Real-time Dashboard** - zie meldingen direct verschijnen
-- ✅ MQTT communicatie via Node.js backend
-- ✅ WebSocket voor real-time updates tussen apparaten
-- ✅ Responsive design voor mobiel en desktop
-- ✅ Docker ondersteuning voor eenvoudige deployment
+- PWA met offline support & foto upload
+- Real-time dashboard met persistente messages
+- MQTT communicatie via HiveMQ broker
+- WebSocket voor live updates
+- Multi-device support (meerdere clients)
+- Docker deployment met volume mounts
+- Responsive design (2 cols mobiel, 4 cols desktop)
 
 ## Tech Stack
 
-### Frontend
-- **React** - UI framework
-- **Vite** - Build tool
-- **Vite PWA Plugin** - PWA functionality
+**Frontend:** React 18 + Vite + PWA Plugin  
+**Dashboard:** React 18 + WebSocket  
+**Backend:** Node.js + Express + MQTT.js + Multer + WebSocket  
+**Deployment:** Docker + Docker Compose  
+**MQTT Broker:** HiveMQ (public: `mqtt://broker.hivemq.com`)
 
-### Backend
-- **Node.js + Express** - Web server
-- **mqtt.js** - MQTT client
-- **WebSocket (ws)** - Real-time communication
+## Buttons Aanpassen
 
-## Getting Started
-
-### Prerequisites
-- **Option 1 (Docker - aanbevolen):** Docker Desktop
-- **Option 2 (Development):** Node.js (v18 or higher) + npm
-
-### Installation met Docker
-
-**Start alles in één keer:**
-```powershell
-docker-compose up -d
+Bewerk `frontend/src/data/buttons.js`:
+```javascript
+export const buttons = [
+  {
+    id: 'melden',
+    label: 'Melden',
+    icon: '/buttonicons/melden.png',
+    hasAction: true,
+    backgroundColor: '#e6ecf8',
+    textColor: '#333'
+  }
+  // Voeg meer buttons toe...
+];
 ```
 
-**Toegang tot de applicaties:**
-- 📱 **App**: http://localhost:6789
-- 📊 **Dashboard**: http://localhost:6790
-- 🔧 **Backend API**: http://localhost:3001
+Plaats iconen in `frontend/public/buttonicons/`.
 
-**Test het:**
-1. Open de app op http://localhost:6789
-2. Open het dashboard op http://localhost:6790 (op een ander apparaat of tabblad)
-3. Klik op "Melden" of "Compass" in de app
-4. Zie de melding direct verschijnen op het dashboard! 🎯
+## Troubleshooting
 
-### Installation zonder Docker (Development)
+**Kan niet verbinden vanaf ander apparaat:**
+- Check firewall: sta poorten 3001, 6789, 6790 toe
+- Controleer `.env` heeft correcte server IP (niet localhost)
+- Zelfde WiFi netwerk?
 
-1. **Install frontend dependencies:**
-```powershell
-cd frontend
-npm install
+**Dashboard toont geen messages:**
+- Check browser console voor WebSocket errors
+- Controleer backend logs: `docker logs goapp-backend`
+- Clear localStorage: Dev Tools → Application → Local Storage
+
+**Foto upload werkt niet:**
+- Controleer backend logs voor Multer errors
+- Check uploads volume: `docker exec goapp-backend ls /app/uploads`
+- Max bestandsgrootte: 10MB
+
+## Environment Variables
+
+| Variable | Locatie | Beschrijving |
+|----------|---------|--------------|
+| `BACKEND_URL` | `.env` (root) | Backend URL voor frontend (Docker) |
+| `BACKEND_WS_URL` | `.env` (root) | WebSocket URL voor dashboard (Docker) |
+| `VITE_BACKEND_URL` | `frontend/.env` | Backend URL (development) |
+| `VITE_BACKEND_WS_URL` | `dashboard/.env` | WebSocket URL (development) |
+| `MQTT_BROKER` | Backend | MQTT broker URL |
+| `MQTT_TOPIC` | Backend | MQTT topic naam |
+
+**Docker:** Gebruik alleen `.env` in root folder  
+**Development:** Maak `.env` files in `frontend/` en `dashboard/` folders
+
+## Docker Commando's
+
+```bash
+# Start alles
+docker compose up -d --build
+
+# Stop alles
+docker compose down
+
+# Rebuild 1 service
+docker compose up -d --build frontend
+
+# Logs bekijken
+docker logs goapp-backend -f
+docker logs goapp-dashboard -f
+docker logs goapp-frontend -f
+
+# Restart
+docker compose restart
 ```
 
-2. **Install dashboard dependencies:**
+## IP Adres Vinden
+
+**Windows (PowerShell):**
 ```powershell
-cd dashboard
-npm install
+ipconfig
+# Zoek "IPv4 Address" onder je WiFi adapter
 ```
 
-3. **Install backend dependencies:**
-```powershell
-cd backend
-npm install
+**macOS/Linux:**
+```bash
+ifconfig
+# Of: ip addr show
 ```
 
-4. **Configure backend environment:**
-```powershell
-cd backend
-cp .env.example .env
-```
+---
 
-Edit `.env` to configure your MQTT broker (default uses public HiveMQ broker).
-
-### Running the Application
-
-#### Option 1: Docker (Gemakkelijkste manier!)
-
-**Alles starten met één commando:**
-```powershell
-docker-compose up
-```
-
-De app draait nu op http://localhost
-
-**Stoppen:**
-```powershell
-docker-compose down
-```
-
-**Rebuild na wijzigingen:**
-```powershell
-docker-compose up --build
-```
-
-#### Option 2: Development mode (voor development)
-
-1. **Start the backend server:**
-```powershell
-cd backend
-npm run dev
-```
-The backend will run on http://localhost:3001
-
-2. **Start the frontend (in a new terminal):**
-```powershell
-cd frontend
-npm run dev
-```
-The frontend will run on http://localhost:3000
-
-3. **Start the dashboard (in a new terminal):**
-```powershell
-cd dashboard
-npm run dev
-```
-The dashboard will run on http://localhost:3002
-
-### Building for Production
-
-**Frontend:**
-```powershell
-cd frontend
-npm run build
-```
-
-The build output will be in `frontend/dist/`
-
-## Hoe werkt het?
-
-### Communicatie Flow
-1. **App** (mobiel/tablet) → Gebruiker klikt "Melden" of "Compass"
-2. **Backend** → Ontvangt actie en publiceert via MQTT
-3. **Dashboard** → Luistert via WebSocket en toont melding real-time
-
-### Twee Apparaten Setup
-- **Apparaat 1 (mobiel)**: Open http://localhost:6789 - De app
-- **Apparaat 2 (desktop)**: Open http://localhost:6790 - Het dashboard
-- Klik op een knop in de app → Zie het direct op het dashboard! ✨
-
-## MQTT Configuration
-
-The backend connects to an MQTT broker (default: `mqtt://broker.hivemq.com`).
-
-Configure in `backend/.env`:
-- `MQTT_BROKER` - MQTT broker URL
-- `MQTT_TOPIC` - Default topic for messages
-- `PORT` - Backend server port
-
-## API Endpoints
-
-- `GET /api/health` - Health check
-- `POST /api/action/melden` - Trigger Melden action
-- `POST /api/action/compass` - Trigger Compass action
-- `POST /api/mqtt/publish` - Publish custom MQTT message
-
-## Next Steps
-
-- ✅ WebSocket verbinding voor real-time updates
-- ✅ Dashboard voor monitoring
-- ✅ Twee apparaten communicatie
-- 🔲 Geluid/notificaties op dashboard bij nieuwe meldingen
-- 🔲 GPS locatie toevoegen aan meldingen
-- 🔲 Authenticatie voor beveiligde toegang
-- 🔲 Eigen MQTT broker opzetten
-- 🔲 PWA icons aanpassen
-
-## License
-
-MIT
+**Gemaakt voor veilige werkplekken**

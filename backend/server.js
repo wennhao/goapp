@@ -4,15 +4,52 @@ import mqtt from 'mqtt';
 import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
 import dotenv from 'dotenv';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Create uploads directory if it doesn't exist
+const uploadsDir = './uploads';
+if (!fs.existsSync(uploadsDir)){
+    fs.mkdirSync(uploadsDir);
+}
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'));
+    }
+  }
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads')); // Serve uploaded files
 
 // Create HTTP server
 const server = createServer(app);
@@ -105,18 +142,28 @@ app.post('/api/mqtt/publish', (req, res) => {
 });
 
 // Handle button actions
-app.post('/api/action/melden', (req, res) => {
+app.post('/api/action/melden', upload.single('photo'), (req, res) => {
+  const data = {
+    ...req.body
+  };
+  
+  // Add photo URL if file was uploaded
+  if (req.file) {
+    data.photoUrl = `/uploads/${req.file.filename}`;
+    data.photoFilename = req.file.filename;
+  }
+  
   const message = JSON.stringify({
     action: 'melden',
     timestamp: new Date().toISOString(),
-    data: req.body
+    data: data
   });
   
   mqttClient.publish(MQTT_TOPIC, message, (err) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to send message' });
     }
-    res.json({ success: true, action: 'melden' });
+    res.json({ success: true, action: 'melden', photoUrl: data.photoUrl });
   });
 });
 
@@ -136,6 +183,8 @@ app.post('/api/action/compass', (req, res) => {
 });
 
 // Start server
-server.listen(PORT, () => {
-  console.log(`✓ Server running on http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`✓ Server running on http://0.0.0.0:${PORT}`);
+  console.log(`✓ Server accessible at http://localhost:${PORT}`);
+  console.log(`✓ Also accessible via network IP (check ipconfig/ifconfig)`);
 });

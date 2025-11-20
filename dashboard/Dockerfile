@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+# Build argument for backend WebSocket URL
+ARG VITE_BACKEND_WS_URL=ws://localhost:3001
+ENV VITE_BACKEND_WS_URL=$VITE_BACKEND_WS_URL
+
 RUN npm run build
 
 # Production stage with nginx

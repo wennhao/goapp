@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+# Build argument for backend URL
+ARG VITE_BACKEND_URL=http://localhost:3001
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+
 RUN npm run build
 
 # Production stage with nginx

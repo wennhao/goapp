@@ -6,6 +6,8 @@ import MeldenForm from './components/MeldenForm';
 import SuccessPage from './components/SuccessPage';
 import KompasPage from './components/KompasPage';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 function App() {
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,7 +16,8 @@ function App() {
   const [formData, setFormData] = useState({
     naam: '',
     projectnaam: 'Escape Room',
-    omschrijving: ''
+    omschrijving: '',
+    photo: null
   });
 
   const handleButtonClick = async (buttonId) => {
@@ -27,7 +30,7 @@ function App() {
     }
     
     try {
-      const response = await fetch(`/api/action/${buttonId}`, {
+      const response = await fetch(`${BACKEND_URL}/api/action/${buttonId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,18 +59,20 @@ function App() {
     console.log('Form submitted:', { ...formData, situatie: selectedSituatie.label });
     
     try {
-      const response = await fetch('/api/action/melden', {
+      const formDataToSend = new FormData();
+      formDataToSend.append('situatie', selectedSituatie.label);
+      formDataToSend.append('naam', formData.naam);
+      formDataToSend.append('projectnaam', formData.projectnaam);
+      formDataToSend.append('omschrijving', formData.omschrijving);
+      formDataToSend.append('device', 'mobile-app');
+      
+      if (formData.photo) {
+        formDataToSend.append('photo', formData.photo);
+      }
+
+      const response = await fetch(`${BACKEND_URL}/api/action/melden`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          situatie: selectedSituatie.label,
-          naam: formData.naam,
-          projectnaam: formData.projectnaam,
-          omschrijving: formData.omschrijving,
-          device: 'mobile-app'
-        })
+        body: formDataToSend
       });
       
       const data = await response.json();
@@ -80,7 +85,7 @@ function App() {
   };
 
   const handleCancel = () => {
-    setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '' });
+    setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '', photo: null });
     setSelectedSituatie(null);
     setCurrentPage('home');
   };
@@ -91,7 +96,7 @@ function App() {
       setSelectedSituatie(null);
     } else if (currentPage === 'success') {
       setCurrentPage('home');
-      setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '' });
+      setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '', photo: null });
       setSelectedSituatie(null);
     } else {
       setCurrentPage('home');
@@ -105,7 +110,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetch('/api/health')
+    fetch(`${BACKEND_URL}/api/health`)
       .then(res => res.json())
       .then(data => {
         if (data.mqtt === 'connected') {

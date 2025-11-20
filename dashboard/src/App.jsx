@@ -1,15 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
+const BACKEND_WS_URL = import.meta.env.VITE_BACKEND_WS_URL || 'ws://localhost:3001';
+
 function App() {
   const [messages, setMessages] = useState([]);
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
   const [showRawJson, setShowRawJson] = useState(false);
   const wsRef = useRef(null);
 
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('dashboard_messages');
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages));
+      } catch (error) {
+        console.error('Error loading saved messages:', error);
+      }
+    }
+  }, []);
+
+  // Save messages to localStorage whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem('dashboard_messages', JSON.stringify(messages));
+    }
+  }, [messages]);
+
   useEffect(() => {
     const connectWebSocket = () => {
-      const ws = new WebSocket('ws://localhost:3001');
+      const ws = new WebSocket(BACKEND_WS_URL);
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -69,6 +90,7 @@ function App() {
 
   const clearMessages = () => {
     setMessages([]);
+    localStorage.removeItem('dashboard_messages');
   };
 
   return (
@@ -148,6 +170,18 @@ function App() {
                             <div className="detail-row">
                               <span className="detail-label">Omschrijving:</span>
                               <span className="detail-value">{msg.data.omschrijving}</span>
+                            </div>
+                          )}
+                          {msg.data.photoUrl && (
+                            <div className="detail-row">
+                              <span className="detail-label">Foto:</span>
+                              <div className="detail-value">
+                                <img 
+                                  src={`${BACKEND_WS_URL.replace('ws://', 'http://').replace('ws', 'http')}${msg.data.photoUrl}`} 
+                                  alt="Uploaded" 
+                                  className="message-photo"
+                                />
+                              </div>
                             </div>
                           )}
                           {msg.data.device && (
