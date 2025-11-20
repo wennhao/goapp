@@ -11,14 +11,40 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 function App() {
   const [connectionStatus, setConnectionStatus] = useState('Disconnected');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState('home');
-  const [selectedSituatie, setSelectedSituatie] = useState(null);
-  const [formData, setFormData] = useState({
-    naam: '',
-    projectnaam: 'Escape Room',
-    omschrijving: '',
-    photo: null
+  const [currentPage, setCurrentPage] = useState(() => {
+    return localStorage.getItem('currentPage') || 'home';
   });
+  const [selectedSituatie, setSelectedSituatie] = useState(() => {
+    const saved = localStorage.getItem('selectedSituatie');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('formData');
+    return saved ? JSON.parse(saved) : {
+      naam: '',
+      projectnaam: 'Escape Room',
+      omschrijving: '',
+      photo: null
+    };
+  });
+
+  // Save state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('currentPage', currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (selectedSituatie) {
+      localStorage.setItem('selectedSituatie', JSON.stringify(selectedSituatie));
+    } else {
+      localStorage.removeItem('selectedSituatie');
+    }
+  }, [selectedSituatie]);
+
+  useEffect(() => {
+    const dataToSave = { ...formData, photo: null }; // Don't save photo file
+    localStorage.setItem('formData', JSON.stringify(dataToSave));
+  }, [formData]);
 
   const handleButtonClick = async (buttonId) => {
     console.log(`${buttonId} button clicked`);
@@ -88,18 +114,26 @@ function App() {
     setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '', photo: null });
     setSelectedSituatie(null);
     setCurrentPage('home');
+    localStorage.removeItem('formData');
+    localStorage.removeItem('selectedSituatie');
+    localStorage.setItem('currentPage', 'home');
   };
 
   const handleBack = () => {
     if (currentPage === 'melden-form') {
       setCurrentPage('melden');
       setSelectedSituatie(null);
+      localStorage.removeItem('selectedSituatie');
     } else if (currentPage === 'success') {
       setCurrentPage('home');
       setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '', photo: null });
       setSelectedSituatie(null);
+      localStorage.removeItem('formData');
+      localStorage.removeItem('selectedSituatie');
+      localStorage.setItem('currentPage', 'home');
     } else {
       setCurrentPage('home');
+      localStorage.setItem('currentPage', 'home');
     }
   };
 

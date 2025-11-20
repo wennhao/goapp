@@ -253,6 +253,63 @@
   color: #666;
 }
 
+.kompas-page {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 900px) {
+  .kompas-page {
+    padding: 0 2.5%;
+  }
+}
+
+.kompas-content {
+  margin-top: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.kompas-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.kompas-divider {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 2rem 0;
+  width: 100%;
+}
+
+.kompas-text {
+  line-height: 1.8;
+  color: #333;
+  margin-top: 2rem;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.kompas-text p {
+  margin-bottom: 1.5rem;
+  font-size: 1.05rem;
+  text-align: left;
+}
+
+.kompas-text p:last-child {
+  margin-bottom: 0;
+}
+
 .app-main {
   flex: 1;
   padding: 2rem 1rem;
