@@ -3,6 +3,11 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
+  /* Enable smooth touch scrolling */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent overscroll bounce */
+  overscroll-behavior-y: contain;
 }
 
 .app-header {
@@ -23,6 +28,11 @@
   flex-direction: column;
   gap: 5px;
   width: 50px;
+  /* Allow button interaction but prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .menu-icon {
@@ -95,6 +105,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* Prevent selection on touch */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Smooth touch interaction */
+  touch-action: manipulation;
 }
 
 .situatie-button .arrow-icon {
@@ -160,18 +177,30 @@
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
+  /* Prevent text selection on touch */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
-
-.btn-primary:hover {
-  transform: scale(1.05);
-  background: rgb(234, 159, 0);
-}
-
 .btn-secondary {
   background: #e6ecf8;
   border: none;
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  /* Prevent text selection on touch */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+} padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 500;
   color: #333;
@@ -348,6 +377,14 @@
   outline: none;
   backface-visibility: hidden;
   -webkit-font-smoothing: subpixel-antialiased;
+  /* Prevent text/image selection on touch */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Optimize for touch interaction */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .tile-button:hover {

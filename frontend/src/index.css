@@ -2,6 +2,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Prevent text selection on touch devices */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Prevent tap highlighting on mobile */
+  -webkit-tap-highlight-color: transparent;
+  /* Disable callout on touch and hold */
+  -webkit-touch-callout: none;
 }
 
 body {
@@ -12,9 +21,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   visibility: visible;
+  /* Enable smooth scrolling */
+  scroll-behavior: smooth;
+  /* Enable momentum scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent pull-to-refresh on mobile browsers */
+  overscroll-behavior-y: contain;
 }
 
 #root {
   min-height: 100vh;
   visibility: visible;
+  /* Enable touch scrolling */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
