@@ -3,6 +3,10 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
+  /* Enable smooth touch scrolling */
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .app-header {
@@ -65,6 +69,10 @@
 
 .page-content {
   padding: 2rem;
+  /* Enable smooth scrolling for page content */
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 .page-content h2 {
@@ -130,6 +138,10 @@
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
+  /* Ensure touch keyboard appears on focus */
+  -webkit-user-select: text;
+  user-select: text;
+  touch-action: manipulation;
 }
 
 .form-group input:focus,
@@ -440,6 +452,21 @@
     grid-template-columns: repeat(2, auto);
     gap: 0.5rem;
   }
+}
+
+/* Allow text selection in input fields and textareas */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Visual indicator when virtual keyboard is active */
+input.keyboard-active,
+textarea.keyboard-active {
+  border-color: rgb(254, 179, 0);
+  box-shadow: 0 0 0 2px rgba(254, 179, 0, 0.2);
+  outline: none;
 }
 
 @media (max-width: 768px) {

@@ -2,6 +2,19 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+html {
+  /* Enable smooth scrolling */
+  scroll-behavior: smooth;
+  /* Optimize touch scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent text selection during touch */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Optimize touch response */
+  touch-action: pan-y pan-x;
 }
 
 body {
@@ -12,8 +25,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #1a1a1a;
   color: #ffffff;
+  /* Enable momentum scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 #root {
   min-height: 100vh;
+  /* Ensure smooth scrolling within the app */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Allow text selection in input fields and textareas */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
 }
