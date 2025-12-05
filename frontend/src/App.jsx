@@ -5,7 +5,6 @@ import MeldenSituatie from './components/MeldenSituatie';
 import MeldenForm from './components/MeldenForm';
 import SuccessPage from './components/SuccessPage';
 import KompasPage from './components/KompasPage';
-import virtualKeyboard from './utils/virtualKeyboard';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
@@ -28,12 +27,6 @@ function App() {
       photo: null
     };
   });
-
-  // Initialize virtual keyboard on mount
-  useEffect(() => {
-    console.log('Virtual keyboard initialized');
-    // The keyboard manager is automatically initialized as a singleton
-  }, []);
 
   // Save state to localStorage whenever it changes
   useEffect(() => {

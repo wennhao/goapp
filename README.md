@@ -109,37 +109,13 @@ goapp/
 
 ## Features
 
-- 📱 **Touch-optimized PWA** with smooth scrolling for touchscreens
-- ⌨️ **Virtual keyboard support** for Raspberry Pi touchscreen kiosks
-- 🔄 **Real-time dashboard** with persistent messages
-- 📡 **MQTT communication** via HiveMQ broker
-- 🌐 **WebSocket** for live updates
-- 📸 **Photo upload** with camera support
-- 🔌 **Offline support** via service worker
-- 📱 **Multi-device support** (multiple clients)
-- 🐳 **Docker deployment** with volume mounts
-- 📐 **Responsive design** (2 cols mobile, 4 cols desktop)
-
-### 🆕 Touch & Keyboard Enhancements
-
-**For Raspberry Pi 5 with touchscreen:**
-- Smooth momentum scrolling with swipe gestures
-- Auto-showing virtual keyboard on input focus
-- Optimized touch interactions and gestures
-- Kiosk mode support with auto-launch
-- See `RASPBERRY_PI_SETUP.md` for full setup guide
-
-**Quick Setup on Raspberry Pi:**
-```bash
-chmod +x setup-rpi.sh
-./setup-rpi.sh
-```
-
-**View Quick Reference:**
-```bash
-chmod +x QUICKSTART.sh
-./QUICKSTART.sh
-```
+- PWA met offline support & foto upload
+- Real-time dashboard met persistente messages
+- MQTT communicatie via HiveMQ broker
+- WebSocket voor live updates
+- Multi-device support (meerdere clients)
+- Docker deployment met volume mounts
+- Responsive design (2 cols mobiel, 4 cols desktop)
 
 ## Tech Stack
 
@@ -251,39 +227,6 @@ ifconfig
 # Of: ip addr show
 ```
 
-## 📱 Touch & Raspberry Pi Support
-
-This app is optimized for **Raspberry Pi 5 touchscreen kiosks**. 
-
-### Touch Features:
-- ✅ Smooth swipe scrolling (up/down)
-- ✅ Auto-showing virtual keyboard on input focus
-- ✅ Optimized touch gestures
-- ✅ Pinch-to-zoom support (up to 5x)
-- ✅ Kiosk mode with auto-launch
-
-### Setup on Raspberry Pi:
-```bash
-# Run the automated setup script
-chmod +x setup-rpi.sh
-./setup-rpi.sh
-
-# Or view quick reference
-chmod +x QUICKSTART.sh
-./QUICKSTART.sh
-```
-
-### Documentation:
-- **`RASPBERRY_PI_SETUP.md`** - Complete setup guide
-- **`TOUCH_ENHANCEMENTS.md`** - Technical details
-- **`QUICKSTART.sh`** - Quick reference commands
-
-### Browser Launch (Kiosk Mode):
-```bash
-chromium-browser --kiosk --app=http://localhost:6789 \
-  --touch-events=enabled --disable-pinch
-```
-
 ---
 
-**Gemaakt voor veilige werkplekken** 🏗️
+**Gemaakt voor veilige werkplekken**

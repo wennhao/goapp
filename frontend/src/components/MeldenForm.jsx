@@ -26,12 +26,8 @@ function MeldenForm({ selectedSituatie, formData, onFormChange, onSubmit, onBack
           <input
             type="text"
             id="naam"
-            name="naam"
             value={formData.naam}
             onChange={(e) => onFormChange({ ...formData, naam: e.target.value })}
-            inputMode="text"
-            autoComplete="name"
-            enterKeyHint="next"
             required
           />
         </div>
@@ -40,7 +36,6 @@ function MeldenForm({ selectedSituatie, formData, onFormChange, onSubmit, onBack
           <input
             type="text"
             id="projectnaam"
-            name="projectnaam"
             value={formData.projectnaam}
             disabled
             className="disabled-input"
@@ -50,13 +45,9 @@ function MeldenForm({ selectedSituatie, formData, onFormChange, onSubmit, onBack
           <label htmlFor="omschrijving">Omschrijving</label>
           <textarea
             id="omschrijving"
-            name="omschrijving"
             value={formData.omschrijving}
             onChange={(e) => onFormChange({ ...formData, omschrijving: e.target.value })}
             rows="5"
-            inputMode="text"
-            autoComplete="off"
-            enterKeyHint="done"
             required
           />
         </div>
