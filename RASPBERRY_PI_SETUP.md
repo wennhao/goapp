@@ -59,7 +59,7 @@ docker-compose up -d
 ### 4. Install Chromium
 
 ```bash
-sudo apt-get install -y chromium-browser unclutter
+sudo apt-get install -y chromium unclutter
 ```
 
 ### 5. Configure Kiosk Mode
@@ -82,7 +82,7 @@ Add these lines:
 @xset -dpms
 @xset s noblank
 
-@chromium-browser --kiosk --incognito --disable-infobars --noerrdialogs --disable-session-crashed-bubble --disable-restore-session-state --start-maximized http://localhost:6789
+@chromium --kiosk --incognito --disable-infobars --noerrdialogs --disable-session-crashed-bubble --disable-restore-session-state --start-maximized http://localhost:6789
 ```
 
 ### 6. Disable Screen Blanking
@@ -139,7 +139,7 @@ The app is configured with:
 
 ### Kiosk mode not starting
 - Check autostart file: `cat ~/.config/lxsession/LXDE-pi/autostart`
-- Verify Chromium is installed: `which chromium-browser`
+- Verify Chromium is installed: `which chromium`
 - Check if app is accessible: `curl http://localhost:6789`
 
 ### Touch not working
