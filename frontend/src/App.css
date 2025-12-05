@@ -3,9 +3,6 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  /* Touch scroll optimization */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
 }
 
 .app-header {
@@ -15,9 +12,6 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  /* Prevent accidental selections */
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 .menu-button {
@@ -29,10 +23,6 @@
   flex-direction: column;
   gap: 5px;
   width: 50px;
-  /* Touch target size - minimum 44x44px recommended */
-  min-width: 44px;
-  min-height: 44px;
-  touch-action: manipulation;
 }
 
 .menu-icon {
@@ -67,10 +57,6 @@
   font-size: 1rem;
   color: #333;
   font-weight: 500;
-  /* Touch target optimization */
-  min-width: 44px;
-  min-height: 44px;
-  touch-action: manipulation;
 }
 
 .back-button:hover {
@@ -79,10 +65,6 @@
 
 .page-content {
   padding: 2rem;
-  /* Enable smooth scrolling on touch */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  flex: 1;
 }
 
 .page-content h2 {
@@ -113,9 +95,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* Touch optimization - larger touch target */
-  min-height: 60px;
-  touch-action: manipulation;
 }
 
 .situatie-button .arrow-icon {
@@ -149,11 +128,8 @@
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 8px;
+  font-size: 1rem;
   font-family: inherit;
-  /* Prevent zoom on mobile/touch */
-  font-size: 16px;
-  /* Better touch target */
-  min-height: 48px;
 }
 
 .form-group input:focus,
@@ -184,10 +160,6 @@
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
-  /* Touch optimization */
-  min-height: 48px;
-  min-width: 100px;
-  touch-action: manipulation;
 }
 
 .btn-primary:hover {
@@ -205,15 +177,63 @@
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
-  /* Touch optimization */
-  min-height: 48px;
-  min-width: 100px;
-  touch-action: manipulation;
 }
 
 .btn-secondary:hover {
   transform: scale(1.05);
   background: #d6dce8;
+}
+
+.photo-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.camera-container {
+  margin-top: 0.5rem;
+}
+
+.camera-preview {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  background: #000;
+}
+
+.camera-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.photo-preview {
+  margin-top: 0.5rem;
+}
+
+.photo-preview img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+}
+
+.btn-remove {
+  margin-top: 0.5rem;
+  background: #ff4444;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+  background: #cc0000;
+  transform: scale(1.05);
 }
 
 .success-page {

@@ -2,19 +2,6 @@
 
 App voor veiligheidsmeldingen met real-time dashboard.
 
-## 🚀 Raspberry Pi Touchscreen Kiosk
-
-Voor het draaien van de frontend op een Raspberry Pi 5 met touchscreen in kiosk mode, zie:
-
-**[📱 Raspberry Pi Setup Guide →](raspberry-pi/README.md)**
-
-Functies:
-- ✅ Auto-start bij boot
-- ✅ Volledige touchscreen ondersteuning  
-- ✅ On-screen keyboard
-- ✅ Kiosk mode (geen mogelijkheid om te sluiten)
-- ✅ Touch scrolling
-
 ## Architectuur
 
 ```
