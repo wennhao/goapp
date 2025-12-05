@@ -2,6 +2,23 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Touch optimizations for Raspberry Pi touchscreen */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in input fields */
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  /* Prevent zoom on focus (important for kiosk mode) */
+  font-size: 16px;
 }
 
 body {
@@ -12,9 +29,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   visibility: visible;
+  /* Touch scrolling optimization */
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Prevent pull-to-refresh */
+  overscroll-behavior-y: contain;
 }
 
 #root {
   min-height: 100vh;
   visibility: visible;
+  /* Enable smooth touch scrolling */
+  touch-action: pan-y;
 }

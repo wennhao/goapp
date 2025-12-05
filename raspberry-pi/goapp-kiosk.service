@@ -1,0 +1,18 @@
+[Unit]
+Description=GoApp Kiosk Mode Service
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=pi
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+ExecStartPre=/bin/sleep 10
+ExecStart=/home/pi/kiosk.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=graphical.target

@@ -23,8 +23,7 @@ function App() {
     return saved ? JSON.parse(saved) : {
       naam: '',
       projectnaam: 'Escape Room',
-      omschrijving: '',
-      photo: null
+      omschrijving: ''
     };
   });
 
@@ -42,8 +41,7 @@ function App() {
   }, [selectedSituatie]);
 
   useEffect(() => {
-    const dataToSave = { ...formData, photo: null }; // Don't save photo file
-    localStorage.setItem('formData', JSON.stringify(dataToSave));
+    localStorage.setItem('formData', JSON.stringify(formData));
   }, [formData]);
 
   const handleButtonClick = async (buttonId) => {
@@ -85,20 +83,18 @@ function App() {
     console.log('Form submitted:', { ...formData, situatie: selectedSituatie.label });
     
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('situatie', selectedSituatie.label);
-      formDataToSend.append('naam', formData.naam);
-      formDataToSend.append('projectnaam', formData.projectnaam);
-      formDataToSend.append('omschrijving', formData.omschrijving);
-      formDataToSend.append('device', 'mobile-app');
-      
-      if (formData.photo) {
-        formDataToSend.append('photo', formData.photo);
-      }
-
       const response = await fetch(`${BACKEND_URL}/api/action/melden`, {
         method: 'POST',
-        body: formDataToSend
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          situatie: selectedSituatie.label,
+          naam: formData.naam,
+          projectnaam: formData.projectnaam,
+          omschrijving: formData.omschrijving,
+          device: 'mobile-app'
+        })
       });
       
       const data = await response.json();
@@ -111,7 +107,7 @@ function App() {
   };
 
   const handleCancel = () => {
-    setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '', photo: null });
+    setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '' });
     setSelectedSituatie(null);
     setCurrentPage('home');
     localStorage.removeItem('formData');
@@ -126,7 +122,7 @@ function App() {
       localStorage.removeItem('selectedSituatie');
     } else if (currentPage === 'success') {
       setCurrentPage('home');
-      setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '', photo: null });
+      setFormData({ naam: '', projectnaam: 'Escape Room', omschrijving: '' });
       setSelectedSituatie(null);
       localStorage.removeItem('formData');
       localStorage.removeItem('selectedSituatie');
