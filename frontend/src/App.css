@@ -184,6 +184,12 @@
   user-select: none;
   touch-action: manipulation;
 }
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  background: rgb(234, 159, 0);
+}
+
 .btn-secondary {
   background: #e6ecf8;
   border: none;
@@ -200,12 +206,6 @@
   -ms-user-select: none;
   user-select: none;
   touch-action: manipulation;
-} padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
